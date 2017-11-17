@@ -1,0 +1,10 @@
+{
+  "name": "klpq-media-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "node-media-server": "^1.1.4"
+  }
+}
