@@ -27,8 +27,10 @@ nms.run();
 
 nms.on('preConnect', (id, args) => {
     console.log('[NodeEvent on preConnect]', `id=${id} args=${JSON.stringify(args)}`);
-    // let session = nms.getSession(id);
-    // session.reject();
+
+    let session = nms.getSession(id);
+
+    session.connectTime = new Date();
 });
 
 nms.on('postConnect', (id, args) => {
@@ -78,6 +80,25 @@ nms.on('donePlay', (id, StreamPath, args) => {
 });
 
 let router = nms.nhs.expressApp;
+
+router.get('/channels', function (req, res, next) {
+    let stats = {};
+
+    nms.sessions.forEach(function (session, key) {
+        console.log(session, key);
+
+        stats[key] = {
+            app: session.appname,
+            playStreamPath: session.playStreamPath,
+            publishStreamPath: session.publishStreamPath,
+            startTime: session.connectTime,
+            ip: _.get(session, ['socket', 'remoteAddress']) || _.get(session, ['req', 'connection', 'remoteAddress']),
+            type: session.constructor.name
+        };
+    });
+
+    res.json(stats);
+});
 
 router.get('/channels/:app/:channel', function (req, res, next) {
     let channelStats = {
