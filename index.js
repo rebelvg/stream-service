@@ -48,7 +48,7 @@ nms.on('prePublish', (id, StreamPath, args) => {
 
     if (regRes === null) return session.reject();
 
-    if (_.has(channelsConfig, [regRes[1], regRes[2]])) return session.reject();
+    if (!_.has(channelsConfig, [regRes[1], regRes[2]])) return session.reject();
 
     let password = _.get(channelsConfig, [regRes[1], regRes[2], 'publish'], null);
 
