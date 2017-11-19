@@ -93,10 +93,9 @@ router.get('/channels/:app/:channel', function (req, res, next) {
 
     channelStats.isLive = !!publisherSession;
     channelStats.viewers = _.filter(Array.from(nms.sessions.values()), (session) => {
-        console.log(session);
         return session.playStreamPath === playStreamPath;
     }).length;
-    channelStats.duration = Math.ceil((Date.now() - publisherSession.startTimestamp) / 1000);
+    channelStats.duration = channelStats.isLive ? Math.ceil((Date.now() - publisherSession.startTimestamp) / 1000) : 0;
     channelStats.bitrate = channelStats.duration > 0 ? Math.ceil(_.get(publisherSession, ['socket', 'bytesRead'], 0) * 8 / channelStats.duration / 1024) : 0;
 
     res.json(channelStats);
