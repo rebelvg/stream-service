@@ -195,7 +195,3 @@ router.get('/channels/:app/:channel', function (req, res, next) {
 
     res.json(channelStats);
 });
-
-process.on('uncaughtException', function (err) {
-    console.log('Caught exception: ' + err.stack);
-});
