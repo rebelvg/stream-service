@@ -89,8 +89,8 @@ router.get('/channels', function (req, res, next) {
 
         stats[key] = {
             app: session.appname,
-            playStreamPath: session.playStreamPath,
             publishStreamPath: session.publishStreamPath,
+            playStreamPath: session.playStreamPath,
             startTime: session.connectTime,
             ip: _.get(session, ['socket', 'remoteAddress']) || _.get(session, ['req', 'connection', 'remoteAddress']),
             type: session.constructor.name
