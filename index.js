@@ -35,6 +35,11 @@ nms.on('preConnect', (id, args) => {
 
 nms.on('postConnect', (id, args) => {
     console.log('[NodeEvent on postConnect]', `id=${id} args=${JSON.stringify(args)}`);
+
+    let session = nms.getSession(id);
+
+    //dirty hack
+    if (session.appname) session.appname = session.appname.replace('/', '');
 });
 
 nms.on('doneConnect', (id, args) => {
@@ -67,8 +72,14 @@ nms.on('donePublish', (id, StreamPath, args) => {
 
 nms.on('prePlay', (id, StreamPath, args) => {
     console.log('[NodeEvent on prePlay]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
-    // let session = nms.getSession(id);
-    // session.reject();
+
+    let session = nms.getSession(id);
+
+    let regRes = /\/(.*)\/(.*)/gi.exec(StreamPath);
+
+    if (regRes === null) return session.reject();
+
+    if (!_.has(channelsConfig, [regRes[1], regRes[2]])) return session.reject();
 });
 
 nms.on('postPlay', (id, StreamPath, args) => {
@@ -84,17 +95,80 @@ let router = nms.nhs.expressApp;
 router.get('/channels', function (req, res, next) {
     let stats = {};
 
-    nms.sessions.forEach(function (session, key) {
-        console.log(session, key);
+    let sessions = {};
 
-        stats[key] = {
-            app: session.appname,
-            publishStreamPath: session.publishStreamPath,
-            playStreamPath: session.playStreamPath,
-            startTime: session.connectTime,
-            ip: _.get(session, ['socket', 'remoteAddress']) || _.get(session, ['req', 'connection', 'remoteAddress']),
-            type: session.constructor.name
-        };
+    nms.sessions.forEach(function (session, id) {
+        if (session.isStarting) {
+            sessions[id] = session;
+
+            let regRes = /\/(.*)\/(.*)/gi.exec(session.publishStreamPath || session.playStreamPath);
+
+            if (regRes === null) return;
+
+            let [app, channel] = _.slice(regRes, 1);
+
+            _.set(stats, [app, channel], {
+                publisher: null,
+                subscribers: []
+            });
+        }
+    });
+
+    let publishers = _.filter(sessions, {'isPublishing': true});
+    let subscribers = _.filter(sessions, (session) => {
+        return !!session.playStreamPath;
+    });
+
+    _.forEach(publishers, (session, id) => {
+        let regRes = /\/(.*)\/(.*)/gi.exec(session.publishStreamPath);
+
+        if (regRes === null) return;
+
+        let [app, channel] = _.slice(regRes, 1);
+
+        _.set(stats, [app, channel, 'publisher'], {
+            app: app,
+            channel: channel,
+            serverId: session.id,
+            connectCreated: session.connectTime,
+            bytes: session.socket.bytesRead,
+            ip: session.socket.remoteAddress
+        });
+    });
+
+    _.forEach(subscribers, (session) => {
+        let regRes = /\/(.*)\/(.*)/gi.exec(session.playStreamPath);
+
+        if (regRes === null) return;
+
+        let [app, channel] = _.slice(regRes, 1);
+
+        switch (session.constructor.name) {
+            case 'NodeRtmpSession': {
+                stats[app][channel]['subscribers'].push({
+                    app: app,
+                    channel: channel,
+                    serverId: session.id,
+                    connectCreated: session.connectTime,
+                    bytes: session.socket.bytesWritten,
+                    ip: session.socket.remoteAddress,
+                    protocol: 'rtmp'
+                });
+                break;
+            }
+            case 'NodeFlvSession': {
+                stats[app][channel]['subscribers'].push({
+                    app: app,
+                    channel: channel,
+                    serverId: session.id,
+                    connectCreated: session.connectTime,
+                    bytes: session.req.connection.bytesWritten,
+                    ip: session.req.connection.remoteAddress,
+                    protocol: 'http'
+                });
+                break;
+            }
+        }
     });
 
     res.json(stats);
