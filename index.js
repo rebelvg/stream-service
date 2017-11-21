@@ -30,6 +30,24 @@ nms.on('preConnect', (id, args) => {
 
     let session = nms.getSession(id);
 
+    //timeout hack
+    switch (session.constructor.name) {
+        case 'NodeRtmpSession': {
+            session.socket.setTimeout(20000);
+
+            session.socket.on('timeout', () => {
+                console.log(`${id} socket timeout.`);
+
+                session.socket.end();
+            });
+
+            break;
+        }
+        case 'NodeFlvSession': {
+            break;
+        }
+    }
+
     session.connectTime = new Date();
 });
 
@@ -154,6 +172,7 @@ router.get('/channels', function (req, res, next) {
                     ip: session.socket.remoteAddress,
                     protocol: 'rtmp'
                 });
+
                 break;
             }
             case 'NodeFlvSession': {
@@ -166,6 +185,7 @@ router.get('/channels', function (req, res, next) {
                     ip: session.req.connection.remoteAddress,
                     protocol: 'http'
                 });
+
                 break;
             }
         }
