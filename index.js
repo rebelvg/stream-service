@@ -38,7 +38,9 @@ nms.on('preConnect', (id, args) => {
             session.socket.on('timeout', () => {
                 console.log(new Date(), `${id} socket timeout.`, session.socket.remoteAddress);
 
-                session.socket.end();
+                let socket = session.socket;
+                session.stop();
+                socket.destroy();
             });
 
             break;
@@ -224,7 +226,12 @@ nms.nhs.httpServer.on('request', function (req) {
     if (req.url.toLowerCase().includes('.flv')) console.log(new Date(), 'http onConnection', req.connection.remoteAddress, req.url);
 });
 
+nms.nhs.wsServer.on('connection', function (ws) {
+    console.log(new Date(), 'ws onConnection', ws._socket.remoteAddress);
+});
+
 process.on('uncaughtException', (err) => {
+    console.log(new Date(), 'server crashed.');
     console.error(new Date(), 'uncaughtException', err);
 
     throw err;
