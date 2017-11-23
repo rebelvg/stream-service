@@ -6,5 +6,12 @@
   "dependencies": {
     "lodash": "^4.17.4",
     "node-media-server": "^1.1.4"
-  }
+  },
+  "apps": [
+    {
+      "name": "klpq-media-server",
+      "script": "index.js",
+      "log_date_format": "YYYY-MM-DD HH:mm Z"
+    }
+  ]
 }

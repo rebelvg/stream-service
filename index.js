@@ -26,19 +26,19 @@ const nms = new NodeMediaServer(config);
 nms.run();
 
 nms.on('preConnect', (id, args) => {
-    console.log(new Date(), '[NodeEvent on preConnect]', `id=${id} args=${JSON.stringify(args)}`);
+    console.log('[NodeEvent on preConnect]', `id=${id} args=${JSON.stringify(args)}`);
 
     let session = nms.getSession(id);
 
     //timeout hack
     switch (session.constructor.name) {
         case 'NodeRtmpSession': {
-            console.log(new Date(), 'rtmp preConnect', id, session.socket.remoteAddress);
+            console.log('rtmp preConnect', id, session.socket.remoteAddress);
 
             session.socket.setTimeout(20000);
 
             session.socket.on('timeout', () => {
-                console.log(new Date(), `${id} socket timeout.`, session.socket.remoteAddress);
+                console.log(`${id} socket timeout.`, session.socket.remoteAddress);
 
                 let socket = session.socket;
                 session.stop();
@@ -48,7 +48,7 @@ nms.on('preConnect', (id, args) => {
             break;
         }
         case 'NodeFlvSession': {
-            console.log(new Date(), 'http preConnect', id, session.req.connection.remoteAddress);
+            console.log('http preConnect', id, session.req.connection.remoteAddress);
 
             break;
         }
@@ -58,7 +58,7 @@ nms.on('preConnect', (id, args) => {
 });
 
 nms.on('postConnect', (id, args) => {
-    console.log(new Date(), '[NodeEvent on postConnect]', `id=${id} args=${JSON.stringify(args)}`);
+    console.log('[NodeEvent on postConnect]', `id=${id} args=${JSON.stringify(args)}`);
 
     let session = nms.getSession(id);
 
@@ -67,11 +67,11 @@ nms.on('postConnect', (id, args) => {
 });
 
 nms.on('doneConnect', (id, args) => {
-    console.log(new Date(), '[NodeEvent on doneConnect]', `id=${id} args=${JSON.stringify(args)}`);
+    console.log('[NodeEvent on doneConnect]', `id=${id} args=${JSON.stringify(args)}`);
 });
 
 nms.on('prePublish', (id, StreamPath, args) => {
-    console.log(new Date(), '[NodeEvent on prePublish]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
+    console.log('[NodeEvent on prePublish]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
 
     let session = nms.getSession(id);
 
@@ -87,15 +87,15 @@ nms.on('prePublish', (id, StreamPath, args) => {
 });
 
 nms.on('postPublish', (id, StreamPath, args) => {
-    console.log(new Date(), '[NodeEvent on postPublish]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
+    console.log('[NodeEvent on postPublish]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
 });
 
 nms.on('donePublish', (id, StreamPath, args) => {
-    console.log(new Date(), '[NodeEvent on donePublish]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
+    console.log('[NodeEvent on donePublish]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
 });
 
 nms.on('prePlay', (id, StreamPath, args) => {
-    console.log(new Date(), '[NodeEvent on prePlay]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
+    console.log('[NodeEvent on prePlay]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
 
     let session = nms.getSession(id);
 
@@ -107,11 +107,11 @@ nms.on('prePlay', (id, StreamPath, args) => {
 });
 
 nms.on('postPlay', (id, StreamPath, args) => {
-    console.log(new Date(), '[NodeEvent on postPlay]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
+    console.log('[NodeEvent on postPlay]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
 });
 
 nms.on('donePlay', (id, StreamPath, args) => {
-    console.log(new Date(), '[NodeEvent on donePlay]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
+    console.log('[NodeEvent on donePlay]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
 });
 
 let router = nms.nhs.expressApp;
@@ -223,22 +223,22 @@ router.get('/channels/:app/:channel', function (req, res, next) {
 });
 
 nms.nrs.tcpServer.on('connection', function (socket) {
-    console.log(new Date(), 'tcp onConnection', socket.remoteAddress);
+    console.log('tcp onConnection', socket.remoteAddress);
 });
 
 nms.nhs.httpServer.on('request', function (req) {
-    if (req.url.toLowerCase().includes('.flv')) console.log(new Date(), 'http onConnection', req.connection.remoteAddress, req.url);
+    if (req.url.toLowerCase().includes('.flv')) console.log('http onConnection', req.connection.remoteAddress, req.url);
 });
 
 nms.nhs.wsServer.on('connection', function (ws) {
-    console.log(new Date(), 'ws onConnection', ws._socket.remoteAddress);
+    console.log('ws onConnection', ws._socket.remoteAddress);
 });
 
 process.on('uncaughtException', (err) => {
-    console.log(new Date(), 'server crashed.');
-    console.error(new Date(), 'uncaughtException', err);
+    console.log('server crashed.');
+    console.error('uncaughtException', err);
 
     throw err;
 });
 
-console.log(new Date(), 'server running.');
+console.log('server running.');
