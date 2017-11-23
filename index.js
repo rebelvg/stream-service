@@ -33,6 +33,8 @@ nms.on('preConnect', (id, args) => {
     //timeout hack
     switch (session.constructor.name) {
         case 'NodeRtmpSession': {
+            console.log(new Date(), 'rtmp preConnect', session.socket.remoteAddress);
+
             session.socket.setTimeout(20000);
 
             session.socket.on('timeout', () => {
@@ -46,6 +48,8 @@ nms.on('preConnect', (id, args) => {
             break;
         }
         case 'NodeFlvSession': {
+            console.log(new Date(), 'http preConnect', session.req.connection.remoteAddress);
+
             break;
         }
     }
