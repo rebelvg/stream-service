@@ -38,11 +38,15 @@ nms.on('preConnect', (id, args) => {
             session.socket.setTimeout(20000);
 
             session.socket.on('timeout', () => {
-                console.log(`${id} socket timeout.`, session.socket.remoteAddress);
+                try {
+                    console.log(`${id} socket timeout.`, _.get(session, ['socket', 'remoteAddress'], null));
 
-                let socket = session.socket;
-                session.stop();
-                socket.destroy();
+                    let socket = session.socket;
+                    session.stop();
+                    socket.destroy();
+                } catch (e) {
+                    console.log(e);
+                }
             });
 
             break;
@@ -222,21 +226,9 @@ router.get('/channels/:app/:channel', function (req, res, next) {
     res.json(channelStats);
 });
 
-nms.nrs.tcpServer.on('connection', function (socket) {
-    console.log('tcp onConnection', socket.remoteAddress);
-});
-
-nms.nhs.httpServer.on('request', function (req) {
-    if (req.url.toLowerCase().includes('.flv')) console.log('http onConnection', req.connection.remoteAddress, req.url);
-});
-
-nms.nhs.wsServer.on('connection', function (ws) {
-    console.log('ws onConnection', ws._socket.remoteAddress);
-});
-
 process.on('uncaughtException', (err) => {
     console.log('server crashed.');
-    console.error('uncaughtException', err);
+    console.log('uncaughtException', err);
 
     throw err;
 });
