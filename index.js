@@ -1,26 +1,8 @@
 const NodeMediaServer = require('node-media-server');
 const _ = require('lodash');
 
-const config = {
-    rtmp: {
-        port: 1935,
-        chunk_size: 60000,
-        gop_cache: true,
-        ping: 60,
-        ping_timeout: 30
-    },
-    http: {
-        port: 8000,
-        allow_origin: '*'
-    },
-    auth: {
-        play: false,
-        publish: false,
-        secret: 'nodemedia2017privatekey'
-    }
-};
-
-const channelsConfig = require('./config.json');
+const config = require('./config.json').nms;
+const channelsConfig = require('./config.json').channels;
 
 const nms = new NodeMediaServer(config);
 nms.run();
