@@ -10,7 +10,7 @@ const config = {
         ping_timeout: 30
     },
     http: {
-        port: 8000,
+        port: 8001,
         allow_origin: '*'
     },
     auth: {
@@ -231,6 +231,10 @@ process.on('uncaughtException', (err) => {
     console.log('uncaughtException', err);
 
     throw err;
+});
+
+nms.nhs.wsServer.close(function () {
+    console.log('ws server stopped.');
 });
 
 console.log('server running.');
