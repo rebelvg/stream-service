@@ -215,14 +215,6 @@ process.on('uncaughtException', (err) => {
     throw err;
 });
 
-nms.nhs.httpServer.on('request', function (req, res) {
-    console.log('http connection.');
-});
-
-nms.nhs.wsServer.on('connection', function (ws, req) {
-    console.log('ws connection.');
-});
-
 nms.nhs.wsServer.close(function () {
     console.log('ws server stopped.');
 });
