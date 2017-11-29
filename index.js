@@ -1,5 +1,6 @@
 const NodeMediaServer = require('node-media-server');
 const _ = require('lodash');
+require('longjohn');
 
 const config = require('./config.json').nms;
 const channelsConfig = require('./config.json').channels;
