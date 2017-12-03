@@ -35,7 +35,7 @@ nms.on('preConnect', (id, args) => {
             break;
         }
         case 'NodeFlvSession': {
-            console.log('http preConnect', id, session.req.connection.remoteAddress);
+            console.log(session.TAG === 'websocket-flv' ? 'ws preConnect' : 'http preConnect', _.get(session, ['req', 'connection', 'remoteAddress'], null));
 
             break;
         }
