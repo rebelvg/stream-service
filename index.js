@@ -1,5 +1,6 @@
 const NodeMediaServer = require('node-media-server');
 const _ = require('lodash');
+require('longjohn');
 
 const config = require('./config.json').nms;
 const channelsConfig = require('./config.json').channels;
@@ -170,7 +171,7 @@ router.get('/channels', function (req, res, next) {
                     connectCreated: session.connectTime,
                     bytes: session.req.connection.bytesWritten,
                     ip: session.req.connection.remoteAddress,
-                    protocol: 'http'
+                    protocol: session.TAG === 'websocket-flv' ? 'ws' : 'http'
                 });
 
                 break;
