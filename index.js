@@ -45,11 +45,6 @@ nms.on('preConnect', (id, args) => {
 
 nms.on('postConnect', (id, args) => {
     console.log('[NodeEvent on postConnect]', `id=${id} args=${JSON.stringify(args)}`);
-
-    let session = nms.getSession(id);
-
-    //dirty hack
-    if (session.appname) session.appname = session.appname.replace('/', '');
 });
 
 nms.on('doneConnect', (id, args) => {
@@ -213,10 +208,6 @@ process.on('uncaughtException', (err) => {
     console.log('uncaughtException', err);
 
     throw err;
-});
-
-nms.nhs.wsServer.close(function () {
-    console.log('ws server stopped.');
 });
 
 console.log('server running.');

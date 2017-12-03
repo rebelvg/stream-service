@@ -31,3 +31,6 @@ node_modules
 .idea/
 
 config.json
+
+privatekey.pem
+certificate.pem
