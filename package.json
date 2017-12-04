@@ -6,6 +6,6 @@
   "dependencies": {
     "lodash": "^4.17.4",
     "longjohn": "^0.2.12",
-    "node-media-server": "git://github.com/illuspas/Node-Media-Server.git#1e1907c5572ad874ff8122acbb965c2c2623b377"
+    "node-media-server": "^1.0.0"
   }
 }
