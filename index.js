@@ -190,13 +190,13 @@ router.get('/channels/:app/:channel', function (req, res, next) {
         bitrate: 0
     };
 
-    let playStreamPath = `/${req.params.app}/${req.params.channel}`;
+    let publishStreamPath = `/${req.params.app}/${req.params.channel}`;
 
-    let publisherSession = nms.sessions.get(nms.publishers.get(playStreamPath));
+    let publisherSession = nms.sessions.get(nms.publishers.get(publishStreamPath));
 
     channelStats.isLive = !!publisherSession;
     channelStats.viewers = _.filter(Array.from(nms.sessions.values()), (session) => {
-        return session.playStreamPath === playStreamPath;
+        return session.playStreamPath === publishStreamPath;
     }).length;
     channelStats.duration = channelStats.isLive ? Math.ceil((Date.now() - publisherSession.startTimestamp) / 1000) : 0;
     channelStats.bitrate = channelStats.duration > 0 ? Math.ceil(_.get(publisherSession, ['socket', 'bytesRead'], 0) * 8 / channelStats.duration / 1024) : 0;
@@ -208,7 +208,7 @@ process.on('uncaughtException', (err) => {
     console.log('server crashed.');
     console.log('uncaughtException', err);
 
-    throw err;
+    process.exit();
 });
 
 console.log('server running.');
