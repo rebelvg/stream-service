@@ -202,9 +202,9 @@ negotiator@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
 
-node-media-server@^1.0.0:
+"node-media-server@git://github.com/illuspas/Node-Media-Server.git#17d02b19336f7c2aec127a6fac94bf1b8a4029cc":
   version "1.1.6"
-  resolved "https://registry.yarnpkg.com/node-media-server/-/node-media-server-1.1.6.tgz#5faacb34b192b38e3c11f9b7ea0efee2438d2eae"
+  resolved "git://github.com/illuspas/Node-Media-Server.git#17d02b19336f7c2aec127a6fac94bf1b8a4029cc"
   dependencies:
     express "^4.15.4"
     ws "^3.1.0"
