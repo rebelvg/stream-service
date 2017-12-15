@@ -2,10 +2,10 @@ const NodeMediaServer = require('node-media-server');
 const _ = require('lodash');
 require('longjohn');
 
-const config = require('./config.json').nms;
+const settings = require('./config.json').nms;
 const channelsConfig = require('./config.json').channels;
 
-const nms = new NodeMediaServer(config);
+const nms = new NodeMediaServer(settings);
 nms.run();
 
 nms.on('preConnect', (id, args) => {
@@ -35,13 +35,11 @@ nms.on('preConnect', (id, args) => {
             break;
         }
         case 'NodeFlvSession': {
-            console.log(session.TAG === 'websocket-flv' ? 'ws preConnect' : 'http preConnect', _.get(session, ['req', 'connection', 'remoteAddress'], null));
+            console.log(session.TAG, 'preConnect', _.get(session, ['req', 'connection', 'remoteAddress'], null));
 
             break;
         }
     }
-
-    session.connectTime = new Date();
 });
 
 nms.on('postConnect', (id, args) => {
