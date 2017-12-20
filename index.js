@@ -1,12 +1,32 @@
 const NodeMediaServer = require('node-media-server');
 const _ = require('lodash');
+const request = require('request');
 require('longjohn');
 
-const settings = require('./config.json').nms;
-const channelsConfig = require('./config.json').channels;
+const streams = require('./api/routes/streams');
 
-const nms = new NodeMediaServer(settings);
+const nmsConfig = require('./config.json').nms;
+const channelsConfig = require('./config.json').channels;
+const settings = require('./config.json').settings;
+
+let streamers = [];
+
+const nms = new NodeMediaServer(nmsConfig);
 nms.run();
+
+function updateStreams() {
+    request.get(`http://${settings.statsHost}/admin/streamers`, {
+        headers: {
+            token: settings.token
+        },
+        json: true
+    }, function (err, res, body) {
+        if (err) return console.error(err);
+        if (res.statusCode !== 200) return console.log(body);
+
+        streamers = body.streamers;
+    });
+}
 
 nms.on('preConnect', (id, args) => {
     console.log('[NodeEvent on preConnect]', `id=${id} args=${JSON.stringify(args)}`);
@@ -61,9 +81,11 @@ nms.on('prePublish', (id, StreamPath, args) => {
 
     if (!_.has(channelsConfig, [regRes[1], regRes[2]])) return session.reject();
 
-    let password = _.get(channelsConfig, [regRes[1], regRes[2], 'publish'], null);
+    let streamer = _.find(streamers, {streamKey: args.key});
 
-    if (password !== args.password) return session.reject();
+    if (!streamer) return session.reject();
+
+    session.streamerId = streamer._id;
 });
 
 nms.on('postPublish', (id, StreamPath, args) => {
@@ -100,5 +122,13 @@ process.on('uncaughtException', (err) => {
 
     process.exit();
 });
+
+updateStreams();
+
+setInterval(updateStreams, 5000);
+
+let express = nms.nhs.expressApp;
+
+express.use('/api_v2/streams', streams(nms));
 
 console.log('server running.');

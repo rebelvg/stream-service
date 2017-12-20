@@ -27,5 +27,9 @@
         "publish": null
       }
     }
+  },
+  "settings": {
+    "statsHost": "localhost:8001",
+    "token": null
   }
 }
