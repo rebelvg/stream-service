@@ -3,8 +3,6 @@ const _ = require('lodash');
 const request = require('request');
 require('longjohn');
 
-const streams = require('./api/routes/streams');
-
 const nmsConfig = require('./config.json').nms;
 const channelsConfig = require('./config.json').channels;
 const settings = require('./config.json').settings;
@@ -22,7 +20,7 @@ function updateStreams() {
         json: true
     }, function (err, res, body) {
         if (err) return console.error(err);
-        if (res.statusCode !== 200) return console.log(body);
+        if (res.statusCode !== 200) return console.error(body);
 
         streamers = body.streamers;
     });
@@ -60,6 +58,8 @@ nms.on('preConnect', (id, args) => {
             break;
         }
     }
+
+    session.userId = null;
 });
 
 nms.on('postConnect', (id, args) => {
@@ -85,7 +85,7 @@ nms.on('prePublish', (id, StreamPath, args) => {
 
     if (!streamer) return session.reject();
 
-    session.streamerId = streamer._id;
+    session.userId = streamer._id;
 });
 
 nms.on('postPublish', (id, StreamPath, args) => {
@@ -129,6 +129,8 @@ setInterval(updateStreams, 5000);
 
 let express = nms.nhs.expressApp;
 
-express.use('/api_v2/streams', streams(nms));
+const clients = require('./api/routes/clients');
+
+express.use('/api/clients', clients(nms));
 
 console.log('server running.');

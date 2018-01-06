@@ -1,6 +1,6 @@
 const express = require('express');
 
-const streamController = require('../controllers/streams');
+const streamController = require('../controllers/clients');
 const auth = require('../middleware/auth');
 
 let router = express.Router();
