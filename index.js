@@ -12,6 +12,8 @@ let streamers = [];
 const nms = new NodeMediaServer(nmsConfig);
 nms.run();
 
+const isDev = process.env.NODE_ENV === 'dev';
+
 function updateStreams() {
     request.get(`http://${settings.statsHost}/admin/streamers`, {
         headers: {
@@ -73,6 +75,8 @@ nms.on('doneConnect', (id, args) => {
 nms.on('prePublish', (id, StreamPath, args) => {
     console.log('[NodeEvent on prePublish]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
 
+    if (isDev) return;
+
     let session = nms.getSession(id);
 
     let regRes = /\/(.*)\/(.*)/gi.exec(StreamPath);
@@ -99,6 +103,8 @@ nms.on('donePublish', (id, StreamPath, args) => {
 nms.on('prePlay', (id, StreamPath, args) => {
     console.log('[NodeEvent on prePlay]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
 
+    if (isDev) return;
+
     let session = nms.getSession(id);
 
     let regRes = /\/(.*)\/(.*)/gi.exec(StreamPath);
@@ -123,9 +129,11 @@ process.on('uncaughtException', (err) => {
     process.exit();
 });
 
-updateStreams();
+if (!isDev) {
+    updateStreams();
 
-setInterval(updateStreams, 5000);
+    setInterval(updateStreams, 5000);
+}
 
 let express = nms.nhs.expressApp;
 
