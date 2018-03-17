@@ -22,7 +22,8 @@ function updateStreams() {
         json: true
     }, function (err, res, body) {
         if (err) return console.error(err);
-        if (res.statusCode !== 200) return console.error(body);
+        if (res.statusCode !== 200) return;
+        if (!_.isObject(body)) return;
 
         streamers = body.streamers;
     });
@@ -75,15 +76,17 @@ nms.on('doneConnect', (id, args) => {
 nms.on('prePublish', (id, StreamPath, args) => {
     console.log('[NodeEvent on prePublish]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
 
-    if (isDev) return;
-
     let session = nms.getSession(id);
 
     let regRes = /\/(.*)\/(.*)/gi.exec(StreamPath);
 
     if (regRes === null) return session.reject();
 
-    if (!_.has(channelsConfig, [regRes[1], regRes[2]])) return session.reject();
+    const [path, appName, channelName] = regRes;
+
+    if (!_.get(channelsConfig, [appName], []).includes(channelName)) return session.reject();
+
+    if (isDev) return;
 
     let streamer = _.find(streamers, {streamKey: args.key});
 
@@ -103,15 +106,15 @@ nms.on('donePublish', (id, StreamPath, args) => {
 nms.on('prePlay', (id, StreamPath, args) => {
     console.log('[NodeEvent on prePlay]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
 
-    if (isDev) return;
-
     let session = nms.getSession(id);
 
     let regRes = /\/(.*)\/(.*)/gi.exec(StreamPath);
 
     if (regRes === null) return session.reject();
 
-    if (!_.has(channelsConfig, [regRes[1], regRes[2]])) return session.reject();
+    const [path, appName, channelName] = regRes;
+
+    if (!_.get(channelsConfig, [appName], []).includes(channelName)) return session.reject();
 });
 
 nms.on('postPlay', (id, StreamPath, args) => {
@@ -129,9 +132,9 @@ process.on('uncaughtException', (err) => {
     process.exit();
 });
 
-if (!isDev) {
-    updateStreams();
+updateStreams();
 
+if (!isDev) {
     setInterval(updateStreams, 5000);
 }
 
