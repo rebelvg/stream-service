@@ -2,6 +2,7 @@ const NodeMediaServer = require('node-media-server');
 const _ = require('lodash');
 const request = require('request');
 require('longjohn');
+const fs = require('fs');
 
 const nmsConfig = require('./config.json').nms;
 const channelsConfig = require('./config.json').channels;
@@ -10,7 +11,6 @@ const settings = require('./config.json').settings;
 let streamers = [];
 
 const nms = new NodeMediaServer(nmsConfig);
-nms.run();
 
 const isDev = process.env.NODE_ENV === 'dev';
 
@@ -138,10 +138,22 @@ if (!isDev) {
     setInterval(updateStreams, 5000);
 }
 
+//remove previous unix socket
+if (typeof nmsConfig.http.port === 'string') {
+    if (fs.existsSync(nmsConfig.http.port)) {
+        fs.unlinkSync(nmsConfig.http.port);
+    }
+}
+
+nms.run();
+
+//set unix socket rw rights for nginx
+if (typeof nmsConfig.http.port === 'string') {
+    fs.chmodSync(nmsConfig.http.port, '777');
+}
+
 let express = nms.nhs.expressApp;
 
 const clients = require('./api/routes/clients');
 
 express.use('/api/clients', clients(nms));
-
-console.log('server running.');
