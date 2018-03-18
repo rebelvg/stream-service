@@ -56,12 +56,13 @@ nms.on('preConnect', (id, args) => {
             break;
         }
         case 'NodeFlvSession': {
-            const ip = session.req.ip;
+            const ip = _.get(session.req, ['ip']);
+            const headerIp = _.get(session.req, ['headers', 'X-Forwarded-For']);
 
             //unix socket hack!
             Object.defineProperty(session.req.connection, 'remoteAddress', {
                 get: function () {
-                    return ip;
+                    return ip || headerIp;
                 }
             });
 
