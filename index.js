@@ -56,6 +56,15 @@ nms.on('preConnect', (id, args) => {
             break;
         }
         case 'NodeFlvSession': {
+            const ip = session.req.ip;
+
+            //unix socket hack!
+            Object.defineProperty(session.req.connection, 'remoteAddress', {
+                get: function () {
+                    return ip;
+                }
+            });
+
             console.log(session.TAG, 'preConnect', _.get(session, ['req', 'connection', 'remoteAddress'], null));
 
             break;
@@ -153,6 +162,8 @@ if (typeof nmsConfig.http.port === 'string') {
 }
 
 let express = nms.nhs.expressApp;
+
+express.set('trust proxy', true);
 
 const clients = require('./api/routes/clients');
 
