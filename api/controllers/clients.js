@@ -1,17 +1,17 @@
 const _ = require('lodash');
 
 function getStreams(req, res, next) {
-    const nms = this;
+  const nms = this;
 
-    let clients = {};
+  let clients = {};
 
-    nms.sessions.forEach(function (session, id) {
-        clients[id] = {
-            userId: session.userId
-        };
-    });
+  nms.sessions.forEach(function(session, id) {
+    clients[id] = {
+      userId: session.userId
+    };
+  });
 
-    res.json(clients);
+  res.json(clients);
 }
 
 exports.getStreams = getStreams;

@@ -22,9 +22,7 @@
     }
   },
   "channels": {
-    "live": [
-      "main"
-    ]
+    "live": ["main"]
   },
   "settings": {
     "statsHost": "localhost:8001",

@@ -5,8 +5,8 @@ const auth = require('../middleware/auth');
 
 let router = express.Router();
 
-module.exports = function (nms) {
-    router.get('/', auth.bind(nms), streamController.getStreams.bind(nms));
+module.exports = function(nms) {
+  router.get('/', auth.bind(nms), streamController.getStreams.bind(nms));
 
-    return router;
+  return router;
 };
