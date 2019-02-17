@@ -7,11 +7,9 @@ const nmsConfig = require('./config.json').nms;
 const channelsConfig = require('./config.json').channels;
 const settings = require('./config.json').settings;
 
-const streamers = [];
-
-const nms = new NodeMediaServer(nmsConfig);
-
 const isDev = process.env.NODE_ENV === 'dev';
+
+let streamers = [];
 
 function updateStreams() {
   axios
@@ -27,6 +25,8 @@ function updateStreams() {
       console.error(err);
     });
 }
+
+const nms = new NodeMediaServer(nmsConfig);
 
 nms.on('preConnect', (id, args) => {
   console.log('[NodeEvent on preConnect]', `id=${id} args=${JSON.stringify(args)}`);
@@ -159,7 +159,3 @@ if (typeof nmsConfig.http.port === 'string') {
 const express = nms.nhs.expressApp;
 
 express.set('trust proxy', true);
-
-const clients = require('./api/routes/clients');
-
-express.use('/api/clients', clients(nms));
