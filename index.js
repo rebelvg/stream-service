@@ -1,14 +1,13 @@
 const NodeMediaServer = require('node-media-server');
 const _ = require('lodash');
 const request = require('request');
-require('longjohn');
 const fs = require('fs');
 
 const nmsConfig = require('./config.json').nms;
 const channelsConfig = require('./config.json').channels;
 const settings = require('./config.json').settings;
 
-let streamers = [];
+const streamers = [];
 
 const nms = new NodeMediaServer(nmsConfig);
 
@@ -36,7 +35,7 @@ function updateStreams() {
 nms.on('preConnect', (id, args) => {
   console.log('[NodeEvent on preConnect]', `id=${id} args=${JSON.stringify(args)}`);
 
-  let session = nms.getSession(id);
+  const session = nms.getSession(id);
 
   //timeout hack
   switch (session.constructor.name) {
@@ -49,11 +48,13 @@ nms.on('preConnect', (id, args) => {
         try {
           console.log(`${id} socket timeout.`, _.get(session, ['socket', 'remoteAddress'], null));
 
-          let socket = session.socket;
+          const socket = session.socket;
+
           session.stop();
+
           socket.destroy();
         } catch (e) {
-          console.log(e);
+          console.error(e);
         }
       });
 
@@ -65,7 +66,7 @@ nms.on('preConnect', (id, args) => {
 
       //unix socket hack!
       Object.defineProperty(session.req.connection, 'remoteAddress', {
-        get: function() {
+        get: () => {
           return ip || headerIp;
         }
       });
@@ -90,9 +91,9 @@ nms.on('doneConnect', (id, args) => {
 nms.on('prePublish', (id, StreamPath, args) => {
   console.log('[NodeEvent on prePublish]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
 
-  let session = nms.getSession(id);
+  const session = nms.getSession(id);
 
-  let regRes = /\/(.*)\/(.*)/gi.exec(StreamPath);
+  const regRes = /\/(.*)\/(.*)/gi.exec(StreamPath);
 
   if (regRes === null) return session.reject();
 
@@ -102,7 +103,7 @@ nms.on('prePublish', (id, StreamPath, args) => {
 
   if (isDev) return;
 
-  let streamer = _.find(streamers, { streamKey: args.key });
+  const streamer = _.find(streamers, { streamKey: args.key });
 
   if (!streamer) return session.reject();
 
@@ -120,9 +121,9 @@ nms.on('donePublish', (id, StreamPath, args) => {
 nms.on('prePlay', (id, StreamPath, args) => {
   console.log('[NodeEvent on prePlay]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
 
-  let session = nms.getSession(id);
+  const session = nms.getSession(id);
 
-  let regRes = /\/(.*)\/(.*)/gi.exec(StreamPath);
+  const regRes = /\/(.*)\/(.*)/gi.exec(StreamPath);
 
   if (regRes === null) return session.reject();
 
@@ -137,13 +138,6 @@ nms.on('postPlay', (id, StreamPath, args) => {
 
 nms.on('donePlay', (id, StreamPath, args) => {
   console.log('[NodeEvent on donePlay]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
-});
-
-process.on('uncaughtException', err => {
-  console.log('server crashed.');
-  console.log('uncaughtException', err);
-
-  process.exit();
 });
 
 updateStreams();
@@ -166,7 +160,7 @@ if (typeof nmsConfig.http.port === 'string') {
   fs.chmodSync(nmsConfig.http.port, '777');
 }
 
-let express = nms.nhs.expressApp;
+const express = nms.nhs.expressApp;
 
 express.set('trust proxy', true);
 
