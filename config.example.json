@@ -11,21 +11,15 @@
       "port": 8000,
       "allow_origin": "*"
     },
-    "auth": {
-      "play": false,
-      "publish": false,
-      "secret": "nodemedia2017privatekey"
-    },
-    "apiAuth": {
-      "access": false,
-      "secret": "nodemedia2017apikey"
+    "api": {
+      "key": "nodemedia2017apikey"
     }
   },
   "channels": {
     "live": ["main"]
   },
   "settings": {
-    "statsHost": "localhost:8001",
+    "statsHost": "http://localhost:8001",
     "token": null
   }
 }

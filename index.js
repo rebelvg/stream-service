@@ -15,7 +15,7 @@ const isDev = process.env.NODE_ENV === 'dev';
 
 function updateStreams() {
   request.get(
-    `http://${settings.statsHost}/admin/streamers`,
+    `${settings.statsHost}/admin/streamers`,
     {
       headers: {
         token: settings.token
