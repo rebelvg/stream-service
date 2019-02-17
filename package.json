@@ -4,8 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.18.0",
     "lodash": "^4.17.4",
-    "node-media-server": "git://github.com/rebelvg/Node-Media-Server.git",
-    "request": "^2.83.0"
+    "node-media-server": "git://github.com/rebelvg/Node-Media-Server.git"
   }
 }

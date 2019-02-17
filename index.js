@@ -1,7 +1,7 @@
 const NodeMediaServer = require('node-media-server');
 const _ = require('lodash');
-const request = require('request');
 const fs = require('fs');
+const axios = require('axios');
 
 const nmsConfig = require('./config.json').nms;
 const channelsConfig = require('./config.json').channels;
@@ -14,22 +14,18 @@ const nms = new NodeMediaServer(nmsConfig);
 const isDev = process.env.NODE_ENV === 'dev';
 
 function updateStreams() {
-  request.get(
-    `${settings.statsHost}/admin/streamers`,
-    {
+  axios
+    .get(`${settings.statsHost}/admin/streamers`, {
       headers: {
         token: settings.token
-      },
-      json: true
-    },
-    function(err, res, body) {
-      if (err) return console.error(err);
-      if (res.statusCode !== 200) return;
-      if (!_.isObject(body)) return;
-
-      streamers = body.streamers;
-    }
-  );
+      }
+    })
+    .then(({ data }) => {
+      streamers = data.streamers;
+    })
+    .catch(err => {
+      console.error(err);
+    });
 }
 
 nms.on('preConnect', (id, args) => {
