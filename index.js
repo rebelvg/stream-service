@@ -7,8 +7,6 @@ const nmsConfig = require('./config.json').nms;
 const channelsConfig = require('./config.json').channels;
 const settings = require('./config.json').settings;
 
-const isDev = process.env.NODE_ENV === 'dev';
-
 let streamers = [];
 
 function updateStreams() {
@@ -97,8 +95,6 @@ nms.on('prePublish', (id, StreamPath, args) => {
 
   if (!_.get(channelsConfig, [appName], []).includes(channelName)) return session.reject();
 
-  if (isDev) return;
-
   const streamer = _.find(streamers, { streamKey: args.key });
 
   if (!streamer) return session.reject();
@@ -138,9 +134,7 @@ nms.on('donePlay', (id, StreamPath, args) => {
 
 updateStreams();
 
-if (!isDev) {
-  setInterval(updateStreams, 5000);
-}
+setInterval(updateStreams, 5000);
 
 //remove previous unix socket
 if (typeof nmsConfig.http.port === 'string') {
