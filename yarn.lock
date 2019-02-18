@@ -236,7 +236,7 @@ negotiator@0.6.1:
 
 "node-media-server@git://github.com/rebelvg/Node-Media-Server.git":
   version "1.1.6"
-  resolved "git://github.com/rebelvg/Node-Media-Server.git#e2d7ad62ee7fef1112527410937be0e86121f754"
+  resolved "git://github.com/rebelvg/Node-Media-Server.git#501f43901913d8e1535fe32171eac81b03c9410d"
   dependencies:
     bitop "^0.0.1"
     express "^4.15.4"

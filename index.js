@@ -31,34 +31,12 @@ nms.on('preConnect', (id, args) => {
 
   const session = nms.getSession(id);
 
-  //timeout hack
   switch (session.constructor.name) {
-    case 'NodeRtmpSession': {
-      console.log('rtmp preConnect', id, session.socket.remoteAddress);
-
-      session.socket.setTimeout(20000);
-
-      session.socket.on('timeout', () => {
-        try {
-          console.log(`${id} socket timeout.`, _.get(session, ['socket', 'remoteAddress'], null));
-
-          const socket = session.socket;
-
-          session.stop();
-
-          socket.destroy();
-        } catch (e) {
-          console.error(e);
-        }
-      });
-
-      break;
-    }
     case 'NodeFlvSession': {
       const ip = _.get(session.req, ['ip']);
       const headerIp = _.get(session.req, ['headers', 'x-real-ip']);
 
-      //unix socket hack!
+      //nginx unix socket hack!
       Object.defineProperty(session.req.connection, 'remoteAddress', {
         get: () => {
           return ip || headerIp;
