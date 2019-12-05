@@ -1,28 +1,10 @@
 const NodeMediaServer = require('node-media-server');
 const _ = require('lodash');
 const fs = require('fs');
-const axios = require('axios');
 
 const nmsConfig = require('./config.json').nms;
 const channelsConfig = require('./config.json').channels;
-const settings = require('./config.json').settings;
-
-let streamers = [];
-
-function updateStreams() {
-  axios
-    .get(`${settings.statsHost}/admin/streamers`, {
-      headers: {
-        token: settings.token
-      }
-    })
-    .then(({ data }) => {
-      streamers = data.streamers;
-    })
-    .catch(err => {
-      console.error(err);
-    });
-}
+const { streamKeys } = require('./config.json');
 
 const nms = new NodeMediaServer(nmsConfig);
 
@@ -73,11 +55,7 @@ nms.on('prePublish', (id, StreamPath, args) => {
 
   if (!_.get(channelsConfig, [appName], []).includes(channelName)) return session.reject();
 
-  const streamer = _.find(streamers, { streamKey: args.key });
-
-  if (!streamer) return session.reject();
-
-  session.userId = streamer._id;
+  if (!streamKeys.includes(args.key)) return session.reject();
 });
 
 nms.on('postPublish', (id, StreamPath, args) => {
@@ -109,10 +87,6 @@ nms.on('postPlay', (id, StreamPath, args) => {
 nms.on('donePlay', (id, StreamPath, args) => {
   console.log('[NodeEvent on donePlay]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
 });
-
-updateStreams();
-
-setInterval(updateStreams, 5000);
 
 //remove previous unix socket
 if (typeof nmsConfig.http.port === 'string') {

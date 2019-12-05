@@ -18,8 +18,5 @@
   "channels": {
     "live": ["main"]
   },
-  "settings": {
-    "statsHost": "http://localhost:8001",
-    "token": null
-  }
+  "streamKeys": []
 }
