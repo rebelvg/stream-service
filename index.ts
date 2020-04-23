@@ -1,27 +1,26 @@
-const NodeMediaServer = require('node-media-server');
-const _ = require('lodash');
-const fs = require('fs');
-const axios = require('axios');
+import * as NodeMediaServer from 'node-media-server';
+import * as _ from 'lodash';
+import * as fs from 'fs';
+import axios from 'axios';
 
-const nmsConfig = require('./config.json').nms;
-const channelsConfig = require('./config.json').channels;
-const settings = require('./config.json').settings;
+import { config } from './config';
+
+const { nms: nmsConfig, channels: channelsConfig, settings } = config;
 
 let streamers = [];
 
-function updateStreams() {
-  axios
-    .get(`${settings.statsHost}/admin/streamers`, {
+async function updateStreamers() {
+  try {
+    const { data } = await axios.get(`${settings.statsHost}/admin/streamers`, {
       headers: {
-        token: settings.token
-      }
-    })
-    .then(({ data }) => {
-      streamers = data.streamers;
-    })
-    .catch(err => {
-      console.error(err);
+        token: settings.token,
+      },
     });
+
+    streamers = data.streamers;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 const nms = new NodeMediaServer(nmsConfig);
@@ -40,7 +39,7 @@ nms.on('preConnect', (id, args) => {
       Object.defineProperty(session.req.connection, 'remoteAddress', {
         get: () => {
           return ip || headerIp;
-        }
+        },
       });
 
       console.log(session.TAG, 'preConnect', _.get(session, ['req', 'connection', 'remoteAddress'], null));
@@ -110,9 +109,13 @@ nms.on('donePlay', (id, StreamPath, args) => {
   console.log('[NodeEvent on donePlay]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
 });
 
-updateStreams();
+(async () => {
+  while (true) {
+    await updateStreamers();
 
-setInterval(updateStreams, 5000);
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+  }
+})();
 
 //remove previous unix socket
 if (typeof nmsConfig.http.port === 'string') {

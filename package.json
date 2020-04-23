@@ -1,10 +1,10 @@
 {
   "name": "klpq-media-server",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.ts",
   "license": "MIT",
   "scripts": {
-    "start": "node ."
+    "start": "ts-node ."
   },
   "dependencies": {
     "axios": "^0.19.2",
