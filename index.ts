@@ -68,9 +68,9 @@ nms.on('prePublish', (id, StreamPath, args) => {
 
   if (regRes === null) return session.reject();
 
-  const [path, appName, channelName] = regRes;
+  const [, appName] = regRes;
 
-  if (!_.get(channelsConfig, [appName], []).includes(channelName)) return session.reject();
+  if (!_.has(channelsConfig, appName)) return session.reject();
 
   const streamer = _.find(streamers, { streamKey: args.key });
 
@@ -96,9 +96,9 @@ nms.on('prePlay', (id, StreamPath, args) => {
 
   if (regRes === null) return session.reject();
 
-  const [path, appName, channelName] = regRes;
+  const [, appName] = regRes;
 
-  if (!_.get(channelsConfig, [appName], []).includes(channelName)) return session.reject();
+  if (!_.has(channelsConfig, appName)) return session.reject();
 });
 
 nms.on('postPlay', (id, StreamPath, args) => {
