@@ -7,8 +7,14 @@
     "start": "node ."
   },
   "dependencies": {
-    "axios": "^0.18.0",
-    "lodash": "^4.17.4",
+    "axios": "^0.19.2",
+    "lodash": "^4.17.15",
     "node-media-server": "git://github.com/rebelvg/Node-Media-Server.git"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.150",
+    "@types/node": "^13.9.0",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.8.3"
   }
 }
