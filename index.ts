@@ -3,9 +3,7 @@ import * as _ from 'lodash';
 import * as fs from 'fs';
 import axios from 'axios';
 
-import { config } from './config';
-
-const { nms: nmsConfig, channels: channelsConfig, settings } = config;
+import { nms as nmsConfig, allowedApps, settings } from './config';
 
 let streamers = [];
 
@@ -13,7 +11,7 @@ async function updateStreamers() {
   try {
     const { data } = await axios.get(`${settings.statsHost}/admin/streamers`, {
       headers: {
-        token: settings.token,
+        token: settings.statsToken,
       },
     });
 
@@ -66,15 +64,27 @@ nms.on('prePublish', (id, StreamPath, args) => {
 
   const regRes = /\/(.*)\/(.*)/gi.exec(StreamPath);
 
-  if (regRes === null) return session.reject();
+  if (regRes === null) {
+    session.reject();
+
+    return;
+  }
 
   const [, appName] = regRes;
 
-  if (!_.has(channelsConfig, appName)) return session.reject();
+  if (!allowedApps.includes(appName)) {
+    session.reject();
+
+    return;
+  }
 
   const streamer = _.find(streamers, { streamKey: args.key });
 
-  if (!streamer) return session.reject();
+  if (!streamer) {
+    session.reject();
+
+    return;
+  }
 
   session.userId = streamer._id;
 });
@@ -94,11 +104,19 @@ nms.on('prePlay', (id, StreamPath, args) => {
 
   const regRes = /\/(.*)\/(.*)/gi.exec(StreamPath);
 
-  if (regRes === null) return session.reject();
+  if (regRes === null) {
+    session.reject();
+
+    return;
+  }
 
   const [, appName] = regRes;
 
-  if (!_.has(channelsConfig, appName)) return session.reject();
+  if (!allowedApps.includes(appName)) {
+    session.reject();
+
+    return;
+  }
 });
 
 nms.on('postPlay', (id, StreamPath, args) => {
