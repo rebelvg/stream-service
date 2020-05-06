@@ -16,6 +16,6 @@ export const nms = {
 };
 export const allowedApps = ['live'];
 export const settings = {
-  statsHost: 'http://localhost:8001',
-  statsToken: 'api_token',
+  host: 'http://localhost:8000',
+  token: null,
 };

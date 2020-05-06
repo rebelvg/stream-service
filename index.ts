@@ -9,9 +9,9 @@ let streamers = [];
 
 async function updateStreamers() {
   try {
-    const { data } = await axios.get(`${settings.statsHost}/admin/streamers`, {
+    const { data } = await axios.get(`${settings.host}/admin/streamers`, {
       headers: {
-        token: settings.statsToken,
+        token: settings.token,
       },
     });
 
