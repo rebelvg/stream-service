@@ -3,15 +3,15 @@ import * as _ from 'lodash';
 import * as fs from 'fs';
 import axios from 'axios';
 
-import { NMS, API_SETTINGS } from './config';
+import { NMS_SETTINGS, STATS_API_SETTINGS } from './config';
 
 let streamers = [];
 
 async function updateStreamers() {
   try {
-    const { data } = await axios.get(`${API_SETTINGS.host}/admin/streamers`, {
+    const { data } = await axios.get(`${STATS_API_SETTINGS.host}/admin/streamers`, {
       headers: {
-        token: API_SETTINGS.token,
+        token: STATS_API_SETTINGS.token,
       },
     });
 
@@ -21,7 +21,7 @@ async function updateStreamers() {
   }
 }
 
-const nms = new NodeMediaServer(NMS);
+const nms = new NodeMediaServer(NMS_SETTINGS);
 
 nms.on('preConnect', (id, args) => {
   console.log('[NodeEvent on preConnect]', `id=${id} args=${JSON.stringify(args)}`);
@@ -102,17 +102,17 @@ nms.on('donePlay', (id, StreamPath, args) => {
 })();
 
 //remove previous unix socket
-if (typeof NMS.http.port === 'string') {
-  if (fs.existsSync(NMS.http.port)) {
-    fs.unlinkSync(NMS.http.port);
+if (typeof NMS_SETTINGS.http.port === 'string') {
+  if (fs.existsSync(NMS_SETTINGS.http.port)) {
+    fs.unlinkSync(NMS_SETTINGS.http.port);
   }
 }
 
 nms.run();
 
 //set unix socket rw rights for nginx
-if (typeof NMS.http.port === 'string') {
-  fs.chmodSync(NMS.http.port, '777');
+if (typeof NMS_SETTINGS.http.port === 'string') {
+  fs.chmodSync(NMS_SETTINGS.http.port, '777');
 }
 
 const express = nms.nhs.expressApp;
