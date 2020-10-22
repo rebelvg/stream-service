@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import * as fs from 'fs';
 import axios from 'axios';
 
-import { nms as nmsConfig, allowedApps, settings } from './config';
+import { nms as nmsConfig, settings } from './config';
 
 let streamers = [];
 
@@ -62,22 +62,6 @@ nms.on('prePublish', (id, StreamPath, args) => {
 
   const session = nms.getSession(id);
 
-  const regRes = /\/(.*)\/(.*)/gi.exec(StreamPath);
-
-  if (regRes === null) {
-    session.reject();
-
-    return;
-  }
-
-  const [, appName] = regRes;
-
-  if (!allowedApps.includes(appName)) {
-    session.reject();
-
-    return;
-  }
-
   const streamer = _.find(streamers, { streamKey: args.key });
 
   if (!streamer) {
@@ -99,24 +83,6 @@ nms.on('donePublish', (id, StreamPath, args) => {
 
 nms.on('prePlay', (id, StreamPath, args) => {
   console.log('[NodeEvent on prePlay]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
-
-  const session = nms.getSession(id);
-
-  const regRes = /\/(.*)\/(.*)/gi.exec(StreamPath);
-
-  if (regRes === null) {
-    session.reject();
-
-    return;
-  }
-
-  const [, appName] = regRes;
-
-  if (!allowedApps.includes(appName)) {
-    session.reject();
-
-    return;
-  }
 });
 
 nms.on('postPlay', (id, StreamPath, args) => {
