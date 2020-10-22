@@ -1,4 +1,4 @@
-export const nms = {
+export const NMS = {
   rtmp: {
     port: 1935,
     chunk_size: 60000,
@@ -14,8 +14,7 @@ export const nms = {
     token: 'api_token',
   },
 };
-export const allowedApps = ['live'];
-export const settings = {
+export const API_SETTINGS = {
   host: 'http://localhost:8000',
   token: null,
 };
