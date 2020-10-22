@@ -14,6 +14,7 @@ export const NMS = {
     token: 'api_token',
   },
 };
+
 export const API_SETTINGS = {
   host: 'http://localhost:8000',
   token: null,
