@@ -6,7 +6,7 @@
   "scripts": {
     "start": "ts-node .",
     "pm2:setup": "pm2 start pm2.json",
-    "pm2": "yarn install && rtmp-server"
+    "pm2": "yarn install && pm2 restart rtmp-server"
   },
   "dependencies": {
     "axios": "^0.21.0",
