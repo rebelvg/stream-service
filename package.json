@@ -9,7 +9,9 @@
   "dependencies": {
     "axios": "^0.21.0",
     "lodash": "^4.17.20",
-    "node-media-server": "git://github.com/rebelvg/Node-Media-Server.git"
+    "node-media-server": "git://github.com/rebelvg/Node-Media-Server.git",
+    "pm2:setup": "pm2 start pm2.json",
+    "pm2": "yarn install && rtmp-server"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.165",
