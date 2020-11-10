@@ -118,3 +118,9 @@ if (typeof NMS_SETTINGS.http.port === 'string') {
 const express = nms.nhs.expressApp;
 
 express.set('trust proxy', true);
+
+process.on('uncaughtException', (error) => {
+  console.error('uncaughtException', error);
+
+  process.exit(1);
+});
