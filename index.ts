@@ -9,11 +9,14 @@ let streamers = [];
 
 async function updateStreamers() {
   try {
-    const { data } = await axios.get(`${STATS_API_SETTINGS.host}/admin/streamers`, {
-      headers: {
-        token: STATS_API_SETTINGS.token,
+    const { data } = await axios.get(
+      `${STATS_API_SETTINGS.host}/admin/streamers`,
+      {
+        headers: {
+          token: STATS_API_SETTINGS.token,
+        },
       },
-    });
+    );
 
     streamers = data.streamers;
   } catch (error) {
@@ -24,7 +27,10 @@ async function updateStreamers() {
 const nms = new NodeMediaServer(NMS_SETTINGS);
 
 nms.on('preConnect', (id, args) => {
-  console.log('[NodeEvent on preConnect]', `id=${id} args=${JSON.stringify(args)}`);
+  console.log(
+    '[NodeEvent on preConnect]',
+    `id=${id} args=${JSON.stringify(args)}`,
+  );
 
   const session = nms.getSession(id);
 
@@ -40,7 +46,11 @@ nms.on('preConnect', (id, args) => {
         },
       });
 
-      console.log(session.TAG, 'preConnect', _.get(session, ['req', 'connection', 'remoteAddress'], null));
+      console.log(
+        session.TAG,
+        'preConnect',
+        _.get(session, ['req', 'connection', 'remoteAddress'], null),
+      );
 
       break;
     }
@@ -50,15 +60,24 @@ nms.on('preConnect', (id, args) => {
 });
 
 nms.on('postConnect', (id, args) => {
-  console.log('[NodeEvent on postConnect]', `id=${id} args=${JSON.stringify(args)}`);
+  console.log(
+    '[NodeEvent on postConnect]',
+    `id=${id} args=${JSON.stringify(args)}`,
+  );
 });
 
 nms.on('doneConnect', (id, args) => {
-  console.log('[NodeEvent on doneConnect]', `id=${id} args=${JSON.stringify(args)}`);
+  console.log(
+    '[NodeEvent on doneConnect]',
+    `id=${id} args=${JSON.stringify(args)}`,
+  );
 });
 
 nms.on('prePublish', (id, StreamPath, args) => {
-  console.log('[NodeEvent on prePublish]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
+  console.log(
+    '[NodeEvent on prePublish]',
+    `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`,
+  );
 
   const session = nms.getSession(id);
 
@@ -74,23 +93,38 @@ nms.on('prePublish', (id, StreamPath, args) => {
 });
 
 nms.on('postPublish', (id, StreamPath, args) => {
-  console.log('[NodeEvent on postPublish]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
+  console.log(
+    '[NodeEvent on postPublish]',
+    `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`,
+  );
 });
 
 nms.on('donePublish', (id, StreamPath, args) => {
-  console.log('[NodeEvent on donePublish]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
+  console.log(
+    '[NodeEvent on donePublish]',
+    `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`,
+  );
 });
 
 nms.on('prePlay', (id, StreamPath, args) => {
-  console.log('[NodeEvent on prePlay]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
+  console.log(
+    '[NodeEvent on prePlay]',
+    `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`,
+  );
 });
 
 nms.on('postPlay', (id, StreamPath, args) => {
-  console.log('[NodeEvent on postPlay]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
+  console.log(
+    '[NodeEvent on postPlay]',
+    `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`,
+  );
 });
 
 nms.on('donePlay', (id, StreamPath, args) => {
-  console.log('[NodeEvent on donePlay]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
+  console.log(
+    '[NodeEvent on donePlay]',
+    `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`,
+  );
 });
 
 (async () => {
