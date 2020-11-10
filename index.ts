@@ -1,4 +1,4 @@
-import * as NodeMediaServer from 'node-media-server';
+import { NodeMediaServer } from 'node-media-server';
 import * as _ from 'lodash';
 import * as fs from 'fs';
 import axios from 'axios';
