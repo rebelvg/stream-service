@@ -17,7 +17,7 @@ async function updateStreamers() {
 
     streamers = data.streamers;
   } catch (error) {
-    console.error(error);
+    console.log('updateStreamers_error', error);
   }
 }
 
