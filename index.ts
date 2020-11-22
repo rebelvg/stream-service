@@ -1,7 +1,7 @@
 import { NodeMediaServer } from 'node-media-server';
 import * as _ from 'lodash';
 import * as fs from 'fs';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 import { NMS_SETTINGS, STATS_API_SETTINGS } from './config';
 
@@ -20,7 +20,20 @@ async function updateStreamers() {
 
     streamers = data.streamers;
   } catch (error) {
-    console.log('updateStreamers_error', error);
+    switch (true) {
+      case error.code === 'ECONNREFUSED': {
+        console.log('updateStreamers_econnrefused', error.message);
+        break;
+      }
+      case (error as AxiosError).response?.status === 502: {
+        console.log('updateStreamers_status_502', error.message);
+        break;
+      }
+      default: {
+        console.log('updateStreamers_error', error);
+        break;
+      }
+    }
   }
 }
 
