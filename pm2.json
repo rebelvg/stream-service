@@ -1,10 +1,9 @@
 {
   "apps": [
     {
-      "name": "rtmp-server",
-      "interpreter": "none",
-      "script": "yarn",
-      "args": "start",
+      "name": "stream-service",
+      "interpreter": "node",
+      "script": "dist/src/index.js",
       "log_date_format": "YYYY-MM-DD HH:mm:ss.SSS Z"
     }
   ]

@@ -1,12 +1,14 @@
 {
-  "name": "klpq-media-server",
+  "name": "stream-service",
   "version": "1.0.0",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "license": "MIT",
   "scripts": {
     "start": "ts-node .",
-    "pm2:setup": "pm2 start pm2.json",
-    "pm2": "yarn install && pm2 restart rtmp-server"
+    "pre:deploy": "yarn install && yarn run build",
+    "pm2:setup": "yarn run pre:deploy && pm2 start pm2.json",
+    "pm2": "yarn run pre:deploy && pm2 restart stream-service",
+    "build": "tsc"
   },
   "dependencies": {
     "axios": "^0.21.0",
@@ -15,8 +17,8 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.14.165",
-    "@types/node": "^14.14.7",
-    "ts-node": "^9.0.0",
-    "typescript": "^4.0.5"
+    "@types/node": "^14.14.11",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.2"
   }
 }
