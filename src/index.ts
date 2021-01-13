@@ -67,7 +67,7 @@ nms.on('preConnect', (id, args) => {
     console.log(
       session.protocol,
       'preConnect',
-      _.get(session, ['req', 'connection', 'remoteAddress'], null),
+      session?.req?.socket?.remoteAddress,
     );
   }
 
