@@ -17,3 +17,11 @@ export const STATS_API_SETTINGS = {
   host: 'http://localhost:8000',
   token: null,
 };
+
+export const ALLOWED_APPS = [
+  'public',
+  'private',
+  'internal',
+  'origin',
+  'encode',
+];

@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import axios, { AxiosError } from 'axios';
 import { NodeFlvSession } from 'node-media-server/dist/node_flv_session';
 
-import { NMS_SETTINGS, STATS_API_SETTINGS } from '../config';
+import { ALLOWED_APPS, NMS_SETTINGS, STATS_API_SETTINGS } from '../config';
 
 interface IStatsStreamersResponse {
   streamers: {
@@ -88,6 +88,14 @@ nms.on('prePublish', (id, streamPath, args) => {
   console.log('prePublish', id, streamPath, args);
 
   const session = nms.getSession(id);
+
+  const [, app, channel] = streamPath.split('/');
+
+  if (!ALLOWED_APPS.includes(app)) {
+    session.reject();
+
+    return;
+  }
 
   const streamer = _.find(streamers, { streamKey: args.key });
 
