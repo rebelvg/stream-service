@@ -2,7 +2,6 @@ import { NodeMediaServer } from 'node-media-server';
 import * as _ from 'lodash';
 import * as fs from 'fs';
 import axios, { AxiosError } from 'axios';
-import { NodeFlvSession } from 'node-media-server/dist/node_flv_session';
 
 import { ALLOWED_APPS, NMS_SETTINGS, STATS_API_SETTINGS } from '../config';
 
@@ -53,24 +52,6 @@ nms.on('preConnect', (id, args) => {
 
   const session = nms.getSession(id);
 
-  if (session instanceof NodeFlvSession) {
-    const ip = _.get(session.req, ['ip']);
-    const headerIp = _.get(session.req, ['headers', 'x-real-ip']);
-
-    //nginx unix socket hack!
-    Object.defineProperty(session.req.socket, 'remoteAddress', {
-      get: () => {
-        return ip || headerIp;
-      },
-    });
-
-    console.log(
-      session.protocol,
-      'preConnect',
-      session?.req?.socket?.remoteAddress,
-    );
-  }
-
   session.addMetadata({
     userId: null,
   });
@@ -89,7 +70,7 @@ nms.on('prePublish', (id, streamPath, args) => {
 
   const session = nms.getSession(id);
 
-  const [, app, channel] = streamPath.split('/');
+  const [, app, _channel] = streamPath.split('/');
 
   if (!ALLOWED_APPS.includes(app)) {
     session.reject();
@@ -151,10 +132,6 @@ nms.run();
 if (typeof NMS_SETTINGS.http.port === 'string') {
   fs.chmodSync(NMS_SETTINGS.http.port, '777');
 }
-
-const express = nms.nhs.expressApp;
-
-express.set('trust proxy', true);
 
 process.on('uncaughtException', (error) => {
   console.error('uncaughtException', error);
