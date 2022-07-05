@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import * as fs from 'fs';
 import axios, { AxiosError } from 'axios';
 
-import { ALLOWED_APPS, NMS_SETTINGS, STATS_API_SETTINGS } from '../config';
+import { ALLOWED_APPS, NMS_SETTINGS, STATS_API_SETTINGS } from './config';
 
 interface IStatsStreamersResponse {
   streamers: {
