@@ -138,3 +138,7 @@ process.on('uncaughtException', (error) => {
 
   process.exit(1);
 });
+
+setInterval(() => {
+  console.log(process.memoryUsage());
+}, 60 * 1000);
