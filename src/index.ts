@@ -5,6 +5,8 @@ import axios, { AxiosError } from 'axios';
 
 import { ALLOWED_APPS, NMS_SETTINGS, STATS_API_SETTINGS } from './config';
 
+let lastCheckDate = new Date();
+
 interface IStatsStreamersResponse {
   streamers: {
     _id: string;
@@ -14,6 +16,8 @@ interface IStatsStreamersResponse {
 }
 
 let streamers: IStatsStreamersResponse['streamers'] = [];
+
+let countLiveStreams = 0;
 
 async function updateStreamers() {
   try {
@@ -66,6 +70,8 @@ nms.on('doneConnect', (id, args) => {
 });
 
 nms.on('prePublish', (id, streamPath, args) => {
+  countLiveStreams++;
+
   console.log('prePublish', id, streamPath, args);
 
   const session = nms.getSession(id);
@@ -96,6 +102,8 @@ nms.on('postPublish', (id, streamPath, args) => {
 });
 
 nms.on('donePublish', (id, streamPath, args) => {
+  countLiveStreams--;
+
   console.log('donePublish', id, streamPath, args);
 });
 
@@ -141,4 +149,17 @@ process.on('uncaughtException', (error) => {
 
 setInterval(() => {
   console.log(process.memoryUsage());
+}, 60 * 1000);
+
+setInterval(() => {
+  console.log('countLiveStreams', countLiveStreams);
+
+  if (
+    Date.now() - lastCheckDate.getTime() > 30 * 60 * 1000 &&
+    countLiveStreams === 0
+  ) {
+    process.exit(0);
+  }
+
+  lastCheckDate = new Date();
 }, 60 * 1000);
