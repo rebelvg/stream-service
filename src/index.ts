@@ -104,6 +104,10 @@ nms.on('postPublish', (id, streamPath, args) => {
 nms.on('donePublish', (id, streamPath, args) => {
   countLiveStreams--;
 
+  if (countLiveStreams === 0) {
+    lastCheckDate = new Date();
+  }
+
   console.log('donePublish', id, streamPath, args);
 });
 
@@ -152,7 +156,7 @@ setInterval(() => {
 }, 60 * 1000);
 
 setInterval(() => {
-  console.log('countLiveStreams', countLiveStreams);
+  console.log('countLiveStreams', countLiveStreams, lastCheckDate);
 
   if (
     Date.now() - lastCheckDate.getTime() > 30 * 60 * 1000 &&
@@ -160,6 +164,4 @@ setInterval(() => {
   ) {
     process.exit(0);
   }
-
-  lastCheckDate = new Date();
 }, 60 * 1000);
