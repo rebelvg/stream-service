@@ -73,6 +73,7 @@ nms.on('prePublish', (id, streamPath, args) => {
   countLiveStreams++;
 
   console.log('prePublish', id, streamPath, args);
+  console.log('countLiveStreams', countLiveStreams, lastCheckDate);
 
   const session = nms.getSession(id);
 
@@ -109,6 +110,7 @@ nms.on('donePublish', (id, streamPath, args) => {
   }
 
   console.log('donePublish', id, streamPath, args);
+  console.log('countLiveStreams', countLiveStreams, lastCheckDate);
 });
 
 nms.on('prePlay', (id, streamPath, args) => {
