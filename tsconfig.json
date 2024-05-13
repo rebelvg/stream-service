@@ -8,6 +8,7 @@
     "sourceMap": true,
     "declaration": true,
     "incremental": false,
+    "strictNullChecks": true,
     "outDir": "./dist"
   },
   "include": ["./src/**/*"]

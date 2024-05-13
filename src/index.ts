@@ -5,7 +5,7 @@ import axios, { AxiosError } from 'axios';
 
 import { ALLOWED_APPS, NMS_SETTINGS, STATS_API_SETTINGS } from './config';
 
-let lastCheckDate = new Date();
+let lastCheckDate: Date | null = null;
 
 interface IStatsStreamersResponse {
   streamers: {
@@ -161,6 +161,10 @@ setInterval(() => {
 
 setInterval(() => {
   console.log('countLiveStreams', countLiveStreams, lastCheckDate);
+
+  if (!lastCheckDate) {
+    return;
+  }
 
   if (
     Date.now() - lastCheckDate.getTime() > 30 * 60 * 1000 &&
