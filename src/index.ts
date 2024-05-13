@@ -70,10 +70,7 @@ nms.on('doneConnect', (id, args) => {
 });
 
 nms.on('prePublish', (id, streamPath, args) => {
-  countLiveStreams++;
-
   console.log('prePublish', id, streamPath, args);
-  console.log('countLiveStreams', countLiveStreams, lastCheckDate);
 
   const session = nms.getSession(id);
 
@@ -96,21 +93,26 @@ nms.on('prePublish', (id, streamPath, args) => {
   session.addMetadata({
     userId: streamer._id,
   });
+
+  countLiveStreams++;
+
+  console.log('countLiveStreams', countLiveStreams, lastCheckDate);
 });
 
 nms.on('postPublish', (id, streamPath, args) => {
   console.log('postPublish', id, streamPath, args);
-});
 
-nms.on('donePublish', (id, streamPath, args) => {
   countLiveStreams--;
 
   if (countLiveStreams === 0) {
     lastCheckDate = new Date();
   }
 
-  console.log('donePublish', id, streamPath, args);
   console.log('countLiveStreams', countLiveStreams, lastCheckDate);
+});
+
+nms.on('donePublish', (id, streamPath, args) => {
+  console.log('donePublish', id, streamPath, args);
 });
 
 nms.on('prePlay', (id, streamPath, args) => {
