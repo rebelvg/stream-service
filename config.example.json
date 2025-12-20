@@ -19,5 +19,16 @@
     "host": "http://localhost:8000",
     "token": null
   },
-  "ALLOWED_APPS": ["public", "private", "internal", "origin", "encode"]
+  "ALLOWED_APPS": [
+    "public",
+    "private",
+
+    "external",
+    "internal",
+
+    "origin",
+    "encode",
+
+    "live"
+  ]
 }
