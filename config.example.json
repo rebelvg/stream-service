@@ -16,7 +16,7 @@
     }
   },
   "STATS_API_SETTINGS": {
-    "host": "http://localhost:8000",
+    "host": "http://localhost:8000/v1",
     "token": null
   },
   "ALLOWED_APPS": [

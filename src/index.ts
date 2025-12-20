@@ -22,7 +22,7 @@ let countLiveStreams = 0;
 async function updateStreamers() {
   try {
     const { data } = await axios.get<IStatsStreamersResponse>(
-      `${STATS_API_SETTINGS.host}/v1/admin/streamers`,
+      `${STATS_API_SETTINGS.host}/admin/streamers`,
       {
         headers: {
           token: STATS_API_SETTINGS.token,
