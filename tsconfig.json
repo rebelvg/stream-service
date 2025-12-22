@@ -9,6 +9,8 @@
     "declaration": true,
     "incremental": false,
     "strictNullChecks": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "outDir": "./dist"
   },
   "include": ["./src/**/*"]

@@ -56,6 +56,10 @@ nms.on('preConnect', (id, args) => {
 
   const session = nms.getSession(id);
 
+  if (!session) {
+    return;
+  }
+
   session.addMetadata({
     userId: null,
   });
@@ -73,6 +77,10 @@ nms.on('prePublish', (id, streamPath, args) => {
   console.log('prePublish', id, streamPath, args);
 
   const session = nms.getSession(id);
+
+  if (!session) {
+    return;
+  }
 
   const [, app, _channel] = streamPath.split('/');
 

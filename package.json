@@ -13,7 +13,8 @@
   "dependencies": {
     "axios": "^1.7.9",
     "lodash": "^4.17.21",
-    "node-media-server": "https://github.com/rebelvg/Node-Media-Server.git"
+    "node-media-server": "https://github.com/rebelvg/Node-Media-Server.git",
+    "zod": "^4.2.1"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.13",
