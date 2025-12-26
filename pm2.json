@@ -3,6 +3,7 @@
     {
       "name": "stream-service",
       "interpreter": "node",
+      "interpreter_args": "",
       "script": "dist/index.js",
       "log_date_format": "YYYY-MM-DD HH:mm:ss.SSS Z"
     }
