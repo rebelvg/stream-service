@@ -11,7 +11,10 @@
     "strictNullChecks": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "outDir": "./dist"
+    "strict": false,
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "types": ["node"]
   },
   "include": ["./src/**/*"]
 }

@@ -3,3 +3,4 @@
 node_modules/
 dist/
 config.json
+leak-test/server.log
