@@ -32,17 +32,19 @@ async function updateStreamers() {
 
     streamers = data.streamers;
   } catch (error) {
+    const axiosError = error as AxiosError;
+
     switch (true) {
-      case error.code === 'ECONNREFUSED': {
-        console.log('updateStreamers_econnrefused', error.message);
+      case axiosError.code === 'ECONNREFUSED': {
+        console.log('updateStreamers_econnrefused', axiosError.message);
         break;
       }
-      case (error as AxiosError).response?.status === 502: {
-        console.log('updateStreamers_status_502', error.message);
+      case axiosError.response?.status === 502: {
+        console.log('updateStreamers_status_502', axiosError.message);
         break;
       }
       default: {
-        console.log('updateStreamers_error', error);
+        console.log('updateStreamers_error', axiosError);
         break;
       }
     }
